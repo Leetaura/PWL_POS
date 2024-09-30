@@ -190,32 +190,32 @@ use function Laravel\Prompts\password;
 //     }
 // }
 
-class UserController extends Controller
-{
-    public function index()
-    {
-        // Ambil data pengguna dari database atau buat baru jika tidak ada
-        $user = UserModel::create(
-            [
-                'username' => 'manager111',
-                'nama' => 'manager111',
-                'password' => Hash::make('12345'),
-                'level_id' => 2
-            ],
-        );
-        $user->username = 'manager121';
+// class UserController extends Controller
+// {
+//     public function index()
+//     {
+//         // Ambil data pengguna dari database atau buat baru jika tidak ada
+//         $user = UserModel::create(
+//             [
+//                 'username' => 'manager111',
+//                 'nama' => 'manager111',
+//                 'password' => Hash::make('12345'),
+//                 'level_id' => 2
+//             ],
+//         );
+//         $user->username = 'manager121';
 
-        $user->save();
+//         $user->save();
 
-        $user->wasChanged(); //true
-        $user->wasChanged('username'); //true
-        $user->wasChanged(['username','level_id']); //true
-        $user->wasChanged('nama'); //false
-        dd($user->wasChanged(['nama','username'])); //true
-        // Tampilkan data pengguna dalam view 'user'
-        // return view('user', ['data' => $user]);
-    }
-}
+//         $user->wasChanged(); //true
+//         $user->wasChanged('username'); //true
+//         $user->wasChanged(['username','level_id']); //true
+//         $user->wasChanged('nama'); //false
+//         dd($user->wasChanged(['nama','username'])); //true
+//         // Tampilkan data pengguna dalam view 'user'
+//         // return view('user', ['data' => $user]);
+//     }
+// }
 
 // Penjelasan:
 // $user->wasChanged(['nama','username']) menampilkan true karena:
@@ -230,3 +230,53 @@ class UserController extends Controller
 // 2. Perubahan pada 'username' tidak terdeteksi (cek apakah $user->username = 'manager13' benar-benar mengubah nilai).
 // 3. Metode wasChanged() tidak berfungsi sebagaimana mestinya (cek versi Laravel dan dokumentasi terkini).
 // 4. Ada masalah dengan konfigurasi atau pengaturan model yang mempengaruhi pelacakan perubahan.
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        $user = UserModel::all();
+        return view('user', ['data' => $user]);
+    }
+
+public function tambah()
+{
+    return view('user_tambah');
+}
+public function tambah_simpan(Request $request)
+{
+    UserModel::create([
+        'username' => $request->username,
+        'nama' => $request->nama,
+        'password' => Hash::make($request->password),
+        'level_id' => $request->level_id
+    ]);
+    return redirect('/user');
+}
+public function ubah($user_id)
+{
+    $user = UserModel::find($user_id);
+    return view('user_ubah', ['data' => $user]);
+} 
+public function ubah_simpan($id,Request $request)
+{
+    $user = UserModel::find($id);
+        $user->username = $request->username;
+        $user->nama = $request->nama;
+        $user->password = Hash::make($request->password);
+        $user->level_id = $request->level_id;
+        $user->save();
+    return redirect('/user');
+}
+public function hapus($id)
+{
+    $user = UserModel::find($id);
+    $user->delete();
+    return redirect('/user');
+}
+}
+// Penjelasan singkat:
+// - Kelas UserController mewarisi dari kelas Controller
+// - Metode index() mengambil semua data pengguna dari model UserModel
+// - Data pengguna dikirim ke tampilan 'user' dengan nama variabel 'data'
+// - Tampilan 'user' akan menampilkan daftar semua pengguna
