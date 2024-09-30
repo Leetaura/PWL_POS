@@ -87,15 +87,28 @@ use Illuminate\Support\Facades\Hash;
 //     }
 // }
 
+// class UserController extends Controller
+// {
+//     public function index()
+//     {
+//         // Ambil semua data pengguna dari database
+//         $user = UserModel::where('username', 'manager9')->firstOrFail();
+
+//         // Tampilkan data pengguna dalam view 'user'
+//         return view('user',['data' => $user]);
+//     }
+// }
+
 class UserController extends Controller
 {
     public function index()
     {
-        // Ambil semua data pengguna dari database
-        $user = UserModel::where('username', 'manager9')->firstOrFail();
-
-        // Tampilkan data pengguna dalam view 'user'
-        return view('user',['data' => $user]);
+        // Ambil jumlah pengguna dengan level_id 2 dari database
+        $jumlahUser = UserModel::where('level_id', 2)->count();
+        
+        // Tampilkan jumlah pengguna dalam view 'user'
+        return view('user', ['jumlahUser' => $jumlahUser]);
     }
 }
+
 
