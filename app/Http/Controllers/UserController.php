@@ -132,25 +132,101 @@ use function Laravel\Prompts\password;
 //     }
 // }
 
+// class UserController extends Controller
+// {
+//     public function index()
+//     {
+//         // Ambil data pengguna dari database atau buat baru jika tidak ada
+//         $user = UserModel::firstOrNew(
+//             [
+//                 'username' => 'manager33',
+//                 'nama' => 'manager tiga tiga',
+//                 'password' => Hash::make('12345'),
+//                 'level_id' => 2
+//             ],
+//         );
+//         // Menyimpan data pengguna ke dalam database
+//         // Metode save() akan menyimpan data baru jika belum ada,
+//         // atau memperbarui data yang sudah ada jika ditemukan
+//         $user->save();
+        
+//         // Tampilkan data pengguna dalam view 'user'
+//         return view('user', ['data' => $user]);
+//     }
+// }
+
+// class UserController extends Controller
+// {
+//     public function index()
+//     {
+//         // Ambil data pengguna dari database atau buat baru jika tidak ada
+//         $user = UserModel::create(
+//             [
+//                 'username' => 'manager55',
+//                 'nama' => 'manager55 ',
+//                 'password' => Hash::make('12345'),
+//                 'level_id' => 2
+//             ],
+//         );
+//         $user->username = 'manager56';
+
+//         $user->isDirty(); //true
+//         $user->isDirty('username'); //true
+//         $user->isDirty('nama'); //false
+//         $user->isDirty(['nama','username']); //true
+        
+//         $user->isClean(); //false
+//         $user->isClean('username'); //false
+//         $user->isClean('nama'); //true
+//         $user->isClean(['nama','username']); //false
+
+//         $user->save();
+
+//         $user->isDirty(); //false
+//         $user->isClean(); //true
+        
+//         dd($user->isDirty());
+        
+//     }
+// }
+
 class UserController extends Controller
 {
     public function index()
     {
         // Ambil data pengguna dari database atau buat baru jika tidak ada
-        $user = UserModel::firstOrNew(
+        $user = UserModel::create(
             [
-                'username' => 'manager33',
-                'nama' => 'manager tiga tiga',
+                'username' => 'manager111',
+                'nama' => 'manager111',
                 'password' => Hash::make('12345'),
                 'level_id' => 2
             ],
         );
-        // Menyimpan data pengguna ke dalam database
-        // Metode save() akan menyimpan data baru jika belum ada,
-        // atau memperbarui data yang sudah ada jika ditemukan
+        $user->username = 'manager121';
+
         $user->save();
-        
+
+        $user->wasChanged(); //true
+        $user->wasChanged('username'); //true
+        $user->wasChanged(['username','level_id']); //true
+        $user->wasChanged('nama'); //false
+        dd($user->wasChanged(['nama','username'])); //true
         // Tampilkan data pengguna dalam view 'user'
-        return view('user', ['data' => $user]);
+        // return view('user', ['data' => $user]);
     }
 }
+
+// Penjelasan:
+// $user->wasChanged(['nama','username']) menampilkan true karena:
+// - 'username' diubah dari 'manager111' menjadi 'manager121'.
+// - wasChanged() mengembalikan true jika minimal satu atribut berubah.
+// - Perubahan terdeteksi setelah $user->save() dipanggil.
+
+// Penjelasan singkat:
+// Hasil dari $user->wasChanged(['nama','username']) seharusnya true, bukan false.
+// Jika hasilnya false, kemungkinan ada beberapa alasan:
+// 1. Model tidak benar-benar disimpan ke database (cek apakah $user->save() berhasil).
+// 2. Perubahan pada 'username' tidak terdeteksi (cek apakah $user->username = 'manager13' benar-benar mengubah nilai).
+// 3. Metode wasChanged() tidak berfungsi sebagaimana mestinya (cek versi Laravel dan dokumentasi terkini).
+// 4. Ada masalah dengan konfigurasi atau pengaturan model yang mempengaruhi pelacakan perubahan.
