@@ -6,6 +6,8 @@ use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+use function Laravel\Prompts\password;
+
 // class UserController extends Controller
 // {
 //     public function index()
@@ -99,16 +101,56 @@ use Illuminate\Support\Facades\Hash;
 //     }
 // }
 
+// class UserController extends Controller
+// {
+//     public function index()
+//     {
+//         // Ambil jumlah pengguna dengan level_id 2 dari database
+//         $jumlahUser = UserModel::where('level_id', 2)->count();
+        
+//         // Tampilkan jumlah pengguna dalam view 'user'
+//         return view('user', ['jumlahUser' => $jumlahUser]);
+//     }
+// }
+
+// class UserController extends Controller
+// {
+//     public function index()
+//     {
+//         // Ambil data pengguna dari database atau buat baru jika tidak ada
+//         $user = UserModel::firstOrCreate(
+//             [
+//                 'username' => 'manager22',
+//                 'nama' => 'manager dua dua',
+//                 'password' => Hash::make('12345'),
+//                 'level_id' => 2
+//             ],
+//         );
+        
+//         // Tampilkan data pengguna dalam view 'user'
+//         return view('user', ['data' => $user]);
+//     }
+// }
+
 class UserController extends Controller
 {
     public function index()
     {
-        // Ambil jumlah pengguna dengan level_id 2 dari database
-        $jumlahUser = UserModel::where('level_id', 2)->count();
+        // Ambil data pengguna dari database atau buat baru jika tidak ada
+        $user = UserModel::firstOrNew(
+            [
+                'username' => 'manager33',
+                'nama' => 'manager tiga tiga',
+                'password' => Hash::make('12345'),
+                'level_id' => 2
+            ],
+        );
+        // Menyimpan data pengguna ke dalam database
+        // Metode save() akan menyimpan data baru jika belum ada,
+        // atau memperbarui data yang sudah ada jika ditemukan
+        $user->save();
         
-        // Tampilkan jumlah pengguna dalam view 'user'
-        return view('user', ['jumlahUser' => $jumlahUser]);
+        // Tampilkan data pengguna dalam view 'user'
+        return view('user', ['data' => $user]);
     }
 }
-
-
