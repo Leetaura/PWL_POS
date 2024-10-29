@@ -234,9 +234,13 @@ use function Laravel\Prompts\password;
 class UserController extends Controller
 {
     public function index()
+    // {
+    //     $user = UserModel::with('level')->get();
+    //     dd($user);
+    // }
     {
-        $user = UserModel::with('level')->get();
-        dd($user);
+        $user = UserModel::all();
+        return view('user', ['data' => $user]);
     }
 
 public function tambah()
@@ -257,6 +261,7 @@ public function ubah($user_id)
 {
     $user = UserModel::find($user_id);
     return view('user_ubah', ['data' => $user]);
+    
 } 
 public function ubah_simpan($id,Request $request)
 {

@@ -4,19 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class KategoriController extends Controller
 {
-    public function index()
+    public function create(): View
     {
-        $data = [
-            'kategori_kode' => 'SNK',
-            'kategori_nama' => 'Snack/Makanan Ringan',
-            'created_at' => now()  // Corrected from 'create_at' to 'created_at'
-        ];
+        return view('kategori.create');
+    }
 
-        DB::table('m_kategori')->insert($data);
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'kategori_kode' => 'required',
+            'kategori_nama' => 'required',
+        ]);
 
-        return 'Insert data baru berhasil';
+        return redirect('/kategori');
     }
 }
